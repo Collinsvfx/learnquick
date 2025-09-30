@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn Quick - Feed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: { boxShadow: { card: "0 10px 24px rgba(16,24,40,0.06)" } },
+        },
+      };
+    </script>
+    <style>
+      .card {
+      border-top: 3px solid purple;
+        box-shadow: 0 10px 24px rgba(16, 24, 40, 0.06);
+      }
+      .mt-4\.5 {
+        margin-top: 1.125rem;
+      }
+      .pt-7 {
+        padding-top: 1.75rem;
+      }
+      .pb-4\.5 {
+        padding-bottom: 1.125rem;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b border-gray-200"
+    >
+      <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div
+            class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center"
+          >
+            <i class="fas fa-book-open text-white text-lg"></i>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">Learn Quick</h1>
+        </div>
+      </div>
+    </header>
+
+    <!-- Feed View -->
+    <main class="max-w-md mx-auto pb-20" id="main-content">
+      <div id="feed-view" class="space-y-6 px-4 py-4">
+        <div class="fixed top-20 left-0 right-0 max-w-md mx-auto z-10 px-4">
+          <div
+            class="bg-white rounded-full p-1 flex items-center shadow-sm mb-4 w-fit mx-auto"
+          >
+            <button
+              id="for-you-btn"
+              class="py-2 px-4 rounded-full font-medium transition-colors bg-purple-500 text-white"
+            >
+              For You
+            </button>
+            <button
+              id="by-you-btn"
+              class="py-2 px-4 rounded-full font-medium transition-colors text-gray-600 hover:bg-gray-100"
+            >
+              By You
+            </button>
+          </div>
+        </div>
+
+        <div id="for-you-content">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4 mt-12">
+            For You
+          </h2>
+        </div>
+
+        <div id="by-you-content" class="hidden">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4 mt-12">By You</h2>
+        </div>
+      </div>
+    </main>
+
+    <!-- Deep Dive Modal -->
+    <div
+      id="deep-dive-modal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-2xl max-w-md w-full max-h-[80vh] overflow-y-auto"
+      >
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <h3
+              id="deep-dive-title"
+              class="text-xl font-bold text-gray-800"
+            ></h3>
+            <button
+              id="close-deep-dive"
+              class="p-1 hover:bg-gray-100 rounded-full"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <img
+            id="deep-dive-image"
+            src=""
+            alt=""
+            class="w-full h-48 object-cover rounded-xl mb-4"
+          />
+          <p id="deep-dive-summary" class="text-gray-600 mb-3"></p>
+          <div class="bg-indigo-50 p-4 rounded-xl">
+            <h4 class="font-semibold text-indigo-800 mb-2">Deep Dive</h4>
+            <p id="deep-dive-content" class="text-indigo-700"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interests Modal -->
+    <div
+      id="interests-modal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 hidden"
+    >
+      <div
+        class="bg-white rounded-2xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto"
+      >
+        <h3 class="text-xl font-bold text-gray-800 mb-2">
+          Choose Your Interests
+        </h3>
+        <p class="text-gray-600 mb-6">
+          Select as many topics as you'd like to personalize your feed
+        </p>
+        <div id="interests-list" class="space-y-3"></div>
+        <button
+          id="save-interests-btn"
+          class="w-full mt-6 py-3 rounded-xl font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+        >
+          Start Learning (0 selected)
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 max-w-md mx-auto"
+    >
+      <div class="flex justify-around items-center py-3">
+        <a
+          href="feed.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-indigo-600 bg-indigo-50"
+        >
+          <i class="fas fa-home text-lg mb-1"></i
+          ><span class="text-xs">Feed</span>
+        </a>
+        <a
+          href="search.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-gray-500"
+        >
+          <i class="fas fa-search text-lg mb-1"></i
+          ><span class="text-xs">Search</span>
+        </a>
+        <a
+          href="surprise.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-gray-500"
+        >
+          <i class="fas fa-bolt text-lg mb-1"></i
+          ><span class="text-xs">Surprise</span>
+        </a>
+        <a
+          href="saved.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-gray-500"
+        >
+          <i class="fas fa-bookmark text-lg mb-1"></i
+          ><span class="text-xs">Saved</span>
+        </a>
+        <a
+          href="profile.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-gray-500"
+        >
+          <i class="fas fa-user text-lg mb-1"></i
+          ><span class="text-xs">Profile</span>
+        </a>
+      </div>
+    </nav>
+
+    <script>
+      const mockKnowledgeCards = [
+        {
+          id: 1,
+          title: "The Power of Spaced Repetition",
+          summary: "This is the concise, engaging content...",
+          category: "Technology",
+          readTime: "31s",
+          deepDive: "Spaced repetition is a learning technique...",
+          image:
+            "https://placehold.co/400x200/4f46e5/ffffff?text=Spaced+Repetition",
+        },
+        {
+          id: 2,
+          title: "Why Do We Shake Hands?",
+          summary: "Handshaking dates back to ancient Greece...",
+          category: "History",
+          readTime: "28s",
+          deepDive: "In medieval times, knights would remove...",
+          image:
+            "https://placehold.co/400x200/4f46e5/ffffff?text=Handshake+History",
+        },
+        {
+          id: 3,
+          title: "The 80/20 Rule in Business",
+          summary: "The Pareto Principle states that 80%...",
+          category: "Business",
+          readTime: "35s",
+          deepDive: "Use this principle to prioritize...",
+          image:
+            "https://placehold.co/400x200/059669/ffffff?text=Pareto+Principle",
+        },
+        {
+          id: 4,
+          title: "How to Remember Names",
+          summary: "Repeat the name immediately...",
+          category: "How-To",
+          readTime: "25s",
+          deepDive: "Memory experts also recommend...",
+          image: "https://placehold.co/400x200/dc2626/ffffff?text=Memory+Hack",
+        },
+        {
+          id: 5,
+          title: "British Tea Etiquette",
+          summary: "In the UK, milk goes in *after* tea...",
+          category: "Culture",
+          readTime: "30s",
+          deepDive: "Also: never stir tea in a circular motion...",
+          image: "https://placehold.co/400x200/7c3aed/ffffff?text=British+Tea",
+        },
+        {
+          id: 6,
+          title: "Causes of World War I",
+          summary: "M.A.I.N.: Militarism, Alliances...",
+          category: "History",
+          readTime: "40s",
+          deepDive: "Complex treaty obligations...",
+          image: "https://placehold.co/400x200/ea580c/ffffff?text=WWI+Causes",
+        },
+        {
+          id: 7,
+          title: "What Is Compound Interest?",
+          summary: "Einstein called it the 8th wonder...",
+          category: "Finance",
+          readTime: "32s",
+          deepDive: "Example: $100 at 10% annual interest...",
+          image:
+            "https://placehold.co/400x200/0891b2/ffffff?text=Compound+Interest",
+        },
+      ];
+
+      const categories = [
+        "History",
+        "Business",
+        "How-To",
+        "Culture",
+        "Finance",
+        "Science",
+        "Law",
+        "Fun Facts",
+        "Marketing",
+        "Technology",
+        "Health",
+        "Art",
+        "Music",
+        "Sports",
+        "Travel",
+      ];
+
+      let isLoggedIn = true;
+      let userInterests = ["History", "Business", "How-To"];
+      let savedCards = new Set([1, 2, 4]);
+      let feedType = "forYou";
+
+      const feedTypeButtons = {
+        forYou: document.getElementById("for-you-btn"),
+        byYou: document.getElementById("by-you-btn"),
+      };
+      const contentAreas = {
+        forYou: document.getElementById("for-you-content"),
+        byYou: document.getElementById("by-you-content"),
+      };
+
+      function init() {
+        setupEventListeners();
+        renderFeed();
+      }
+
+      function setupEventListeners() {
+        feedTypeButtons.forYou.addEventListener("click", () =>
+          setFeedType("forYou")
+        );
+        feedTypeButtons.byYou.addEventListener("click", handleByYouAccess);
+        document
+          .getElementById("close-deep-dive")
+          .addEventListener("click", () =>
+            document.getElementById("deep-dive-modal").classList.add("hidden")
+          );
+        document
+          .getElementById("save-interests-btn")
+          .addEventListener("click", saveInterests);
+      }
+
+      function setFeedType(type) {
+        feedType = type;
+        if (type === "forYou") {
+          feedTypeButtons.forYou.className =
+            "py-2 px-4 rounded-full font-medium transition-colors bg-purple-500 text-white";
+          feedTypeButtons.byYou.className =
+            "py-2 px-4 rounded-full font-medium transition-colors text-gray-600 hover:bg-gray-100";
+          contentAreas.forYou.classList.remove("hidden");
+          contentAreas.byYou.classList.add("hidden");
+        } else {
+          feedTypeButtons.byYou.className =
+            "py-2 px-4 rounded-full font-medium transition-colors bg-purple-500 text-white";
+          feedTypeButtons.forYou.className =
+            "py-2 px-4 rounded-full font-medium transition-colors text-gray-600 hover:bg-gray-100";
+          contentAreas.byYou.classList.remove("hidden");
+          contentAreas.forYou.classList.add("hidden");
+        }
+        renderFeed();
+      }
+
+      function handleByYouAccess() {
+        if (!isLoggedIn) {
+          alert("Please log in to access your personalized feed");
+          return;
+        }
+        if (userInterests.length === 0) {
+          showInterestsModal();
+        } else {
+          setFeedType("byYou");
+        }
+      }
+
+      function renderFeed() {
+        if (feedType === "forYou") {
+          renderCards(mockKnowledgeCards, contentAreas.forYou, false);
+        } else {
+          const byYouCards = mockKnowledgeCards.filter((card) =>
+            userInterests.includes(card.category)
+          );
+          if (byYouCards.length > 0) {
+            renderCards(byYouCards, contentAreas.byYou, false);
+          } else {
+            contentAreas.byYou.innerHTML =
+              '<div class="text-center py-8 text-gray-500">No cards match your interests yet. Try selecting more topics!</div>';
+          }
+        }
+      }
+
+      function renderCards(cards, container, isSavedView) {
+        container.innerHTML = `<h2 class="text-lg font-semibold text-gray-800 mb-4 mt-12">${
+          feedType === "forYou" ? "For You" : "By You"
+        }</h2>`;
+        cards.forEach((card) => {
+          const isSaved = savedCards.has(card.id);
+          const cardDiv = document.createElement("div");
+          cardDiv.className =
+            "card mt-4.5 bg-white rounded-2xl shadow-card relative border-t-6 border-purple-600 p-7 pt-7 pb-4.5";
+          const savedTime = isSavedView
+            ? '<div class="float-right text-blue-600 text-sm flex items-center gap-1 bg-blue-100 px-2 py-1 rounded-full"><span>Saved 2 days ago</span><span class="text-xs">• ' +
+              card.readTime +
+              " read</span></div>"
+            : '<div class="float-right text-gray-500 text-sm flex items-center gap-1"><i class="fas fa-lightbulb"></i>' +
+              card.readTime +
+              " Read</div>";
+          cardDiv.innerHTML = `
+                    <div class="mb-3">
+                        <span class="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">${
+                          card.category
+                        }</span>
+                        ${savedTime}
+                    </div>
+                    <div class="mb-4"><h3 class="text-xl font-bold text-gray-800 leading-tight">${
+                      card.title
+                    }</h3></div>
+                    <div class="mb-4"><p class="text-gray-600 leading-relaxed">${
+                      card.summary
+                    }</p></div>
+                    <div class="pt-4 border-t border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div class="flex gap-2">
+                                <button class="like-btn p-2 rounded-full transition-colors flex items-center ${
+                                  isSaved
+                                    ? "bg-purple-100 text-purple-600"
+                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                }" data-id="${card.id}">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button class="save-btn p-2 rounded-full transition-colors flex items-center ${
+                                  isSaved
+                                    ? "bg-purple-100 text-purple-600"
+                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                }" data-id="${card.id}">
+                                    <i class="fas fa-${
+                                      isSaved ? "bookmark" : "bookmark"
+                                    } ${
+            isSaved ? "text-purple-600" : "text-gray-600"
+          }"></i>
+                                </button>
+                                <button class="share-btn p-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors flex items-center" data-id="${
+                                  card.id
+                                }">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                            <button class="deep-dive-btn text-purple-600 font-medium text-sm hover:text-purple-700 flex items-center gap-1" data-id="${
+                              card.id
+                            }">
+                                Learn More <i class="fas fa-book-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+          cardDiv
+            .querySelector(".like-btn")
+            .addEventListener("click", () => {});
+          cardDiv.querySelector(".save-btn").addEventListener("click", () => {
+            if (savedCards.has(card.id)) savedCards.delete(card.id);
+            else savedCards.add(card.id);
+            renderFeed();
+          });
+          cardDiv
+            .querySelector(".share-btn")
+            .addEventListener("click", () =>
+              alert(`Shared: "${card.title}"\n${card.summary}`)
+            );
+          cardDiv
+            .querySelector(".deep-dive-btn")
+            .addEventListener("click", () => showDeepDive(card));
+          container.appendChild(cardDiv);
+        });
+      }
+
+      function showDeepDive(card) {
+        document.getElementById("deep-dive-title").textContent = card.title;
+        document.getElementById("deep-dive-image").src = card.image;
+        document.getElementById("deep-dive-summary").textContent = card.summary;
+        document.getElementById("deep-dive-content").textContent =
+          card.deepDive;
+        document.getElementById("deep-dive-modal").classList.remove("hidden");
+      }
+
+      function showInterestsModal() {
+        document.getElementById("interests-modal").classList.remove("hidden");
+        renderInterestsList();
+      }
+
+      function renderInterestsList() {
+        const container = document.getElementById("interests-list");
+        container.innerHTML = "";
+        categories.forEach((category) => {
+          const button = document.createElement("button");
+          button.className = `w-full p-3 text-left rounded-xl border transition-colors ${
+            userInterests.includes(category)
+              ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+              : "border-gray-200 hover:bg-gray-50"
+          }`;
+          button.innerHTML =
+            category +
+            (userInterests.includes(category)
+              ? '<span class="float-right">✓</span>'
+              : "");
+          button.addEventListener("click", () => {
+            if (userInterests.includes(category))
+              userInterests = userInterests.filter((i) => i !== category);
+            else userInterests.push(category);
+            renderInterestsList();
+            updateSaveButton();
+          });
+          container.appendChild(button);
+        });
+        updateSaveButton();
+      }
+
+      function updateSaveButton() {
+        document.getElementById(
+          "save-interests-btn"
+        ).textContent = `Start Learning (${userInterests.length} selected)`;
+      }
+
+      function saveInterests() {
+        document.getElementById("interests-modal").classList.add("hidden");
+        setFeedType("byYou");
+      }
+
+      init();
+    </script>
+  </body>
+</html>

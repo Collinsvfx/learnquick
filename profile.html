@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn Quick - Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: { boxShadow: { card: "0 10px 24px rgba(16,24,40,0.06)" } },
+        },
+      };
+    </script>
+    <style>
+      .card {
+        box-shadow: 0 10px 24px rgba(16, 24, 40, 0.06);
+      }
+      .mt-4\.5 {
+        margin-top: 1.125rem;
+      }
+      .pt-7 {
+        padding-top: 1.75rem;
+      }
+      .pb-4\.5 {
+        padding-bottom: 1.125rem;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b border-gray-200"
+    >
+      <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div
+            class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center"
+          >
+            <i class="fas fa-book-open text-white text-lg"></i>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">Learn Quick</h1>
+        </div>
+      </div>
+    </header>
+
+    <!-- Profile View -->
+    <main class="max-w-md mx-auto pb-20" id="main-content">
+      <div id="profile-view" class="px-4 py-6">
+        <div class="text-center mb-6">
+          <div
+            class="w-20 h-20 bg-indigo-200 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fas fa-user text-indigo-600 text-2xl"></i>
+          </div>
+          <h2 class="text-xl font-bold text-gray-800">Dominion</h2>
+          <p class="text-gray-600 mt-1">Member since Sept 2024</p>
+        </div>
+        <!-- Add more profile sections as needed -->
+      </div>
+    </main>
+
+    <!-- Navigation -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 max-w-md mx-auto"
+    >
+      <div class="flex justify-around items-center py-3">
+        <a
+          href="index.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-gray-500"
+        >
+          <i class="fas fa-home text-lg mb-1"></i
+          ><span class="text-xs">Feed</span>
+        </a>
+        <a
+          href="search.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-gray-500"
+        >
+          <i class="fas fa-search text-lg mb-1"></i
+          ><span class="text-xs">Search</span>
+        </a>
+        <a
+          href="surprise.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-gray-500"
+        >
+          <i class="fas fa-bolt text-lg mb-1"></i
+          ><span class="text-xs">Surprise</span>
+        </a>
+        <a
+          href="saved.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-gray-500"
+        >
+          <i class="fas fa-bookmark text-lg mb-1"></i
+          ><span class="text-xs">Saved</span>
+        </a>
+        <a
+          href="profile.html"
+          class="flex flex-col items-center px-4 py-2 rounded-lg transition-colors text-indigo-600 bg-indigo-50"
+        >
+          <i class="fas fa-user text-lg mb-1"></i
+          ><span class="text-xs">Profile</span>
+        </a>
+      </div>
+    </nav>
+  </body>
+</html>
