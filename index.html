@@ -18,7 +18,7 @@
     </script>
     <style>
       .card {
-      border-top: 3px solid purple;
+        border-top: 3px solid purple;
         box-shadow: 0 10px 24px rgba(16, 24, 40, 0.06);
       }
       .mt-4\.5 {
@@ -79,6 +79,14 @@
 
         <div id="by-you-content" class="hidden">
           <h2 class="text-lg font-semibold text-gray-800 mb-4 mt-12">By You</h2>
+        </div>
+
+        <!-- Infinite Scroll Trigger -->
+        <div
+          id="loading-indicator"
+          class="text-center py-4 text-gray-500 hidden"
+        >
+          Loading more...
         </div>
       </div>
     </main>
@@ -187,76 +195,7 @@
     </nav>
 
     <script>
-      const mockKnowledgeCards = [
-        {
-          id: 1,
-          title: "The Power of Spaced Repetition",
-          summary: "This is the concise, engaging content...",
-          category: "Technology",
-          readTime: "31s",
-          deepDive: "Spaced repetition is a learning technique...",
-          image:
-            "https://placehold.co/400x200/4f46e5/ffffff?text=Spaced+Repetition",
-        },
-        {
-          id: 2,
-          title: "Why Do We Shake Hands?",
-          summary: "Handshaking dates back to ancient Greece...",
-          category: "History",
-          readTime: "28s",
-          deepDive: "In medieval times, knights would remove...",
-          image:
-            "https://placehold.co/400x200/4f46e5/ffffff?text=Handshake+History",
-        },
-        {
-          id: 3,
-          title: "The 80/20 Rule in Business",
-          summary: "The Pareto Principle states that 80%...",
-          category: "Business",
-          readTime: "35s",
-          deepDive: "Use this principle to prioritize...",
-          image:
-            "https://placehold.co/400x200/059669/ffffff?text=Pareto+Principle",
-        },
-        {
-          id: 4,
-          title: "How to Remember Names",
-          summary: "Repeat the name immediately...",
-          category: "How-To",
-          readTime: "25s",
-          deepDive: "Memory experts also recommend...",
-          image: "https://placehold.co/400x200/dc2626/ffffff?text=Memory+Hack",
-        },
-        {
-          id: 5,
-          title: "British Tea Etiquette",
-          summary: "In the UK, milk goes in *after* tea...",
-          category: "Culture",
-          readTime: "30s",
-          deepDive: "Also: never stir tea in a circular motion...",
-          image: "https://placehold.co/400x200/7c3aed/ffffff?text=British+Tea",
-        },
-        {
-          id: 6,
-          title: "Causes of World War I",
-          summary: "M.A.I.N.: Militarism, Alliances...",
-          category: "History",
-          readTime: "40s",
-          deepDive: "Complex treaty obligations...",
-          image: "https://placehold.co/400x200/ea580c/ffffff?text=WWI+Causes",
-        },
-        {
-          id: 7,
-          title: "What Is Compound Interest?",
-          summary: "Einstein called it the 8th wonder...",
-          category: "Finance",
-          readTime: "32s",
-          deepDive: "Example: $100 at 10% annual interest...",
-          image:
-            "https://placehold.co/400x200/0891b2/ffffff?text=Compound+Interest",
-        },
-      ];
-
+      // =============== 1. Expanded categories (10 total) ===============
       const categories = [
         "History",
         "Business",
@@ -264,22 +203,437 @@
         "Culture",
         "Finance",
         "Science",
-        "Law",
-        "Fun Facts",
-        "Marketing",
-        "Technology",
         "Health",
+        "Technology",
         "Art",
-        "Music",
         "Sports",
-        "Travel",
       ];
 
+      // =============== 2. Pre-added knowledge cards: 5 per category ===============
+      function generateMockCards() {
+        const cards = [];
+        let id = 1;
+
+        // Realistic, engaging titles and content per category
+        const contentByCategory = {
+          History: [
+            {
+              title: "Why Do We Shake Hands?",
+              summary:
+                "Handshaking dates back to ancient Greece as a sign of peace, showing you carried no weapon. In medieval times, knights would remove their gauntlets to prove they weren't hiding a blade.",
+              deepDive:
+                "Archaeological evidence shows handshake-like gestures in ancient Assyrian carvings from 800 BCE. The modern handshake became standardized in 19th-century Europe as a gentlemanly custom.",
+            },
+            {
+              title: "The Real Reason Pirates Wore Eyepatches",
+              summary:
+                "Pirates didn’t wear eyepatches because they lost an eye—they kept one eye covered to maintain night vision when going below deck.",
+              deepDive:
+                "This adaptation allowed them to see clearly in the dark hold of a ship within seconds, giving them a tactical advantage during raids.",
+            },
+            {
+              title: "How the Rosetta Stone Was Discovered",
+              summary:
+                "Found by French soldiers in 1799 near Rosetta, Egypt, the stone contained the same text in Greek, Demotic, and hieroglyphs—unlocking ancient Egyptian writing.",
+              deepDive:
+                "Jean-François Champollion cracked the code in 1822, revolutionizing Egyptology and giving us access to 3,000 years of lost history.",
+            },
+            {
+              title: "The Truth About Viking Helmets",
+              summary:
+                "Vikings never wore horned helmets in battle—those were invented by 19th-century opera costume designers.",
+              deepDive:
+                "Actual Viking helmets were simple, conical, and made of iron or leather—designed for protection, not theater.",
+            },
+            {
+              title: "Why Julius Caesar Was Assassinated",
+              summary:
+                "Senators feared Caesar’s growing power after he declared himself dictator for life—leading to his murder on the Ides of March, 44 BCE.",
+              deepDive:
+                "Ironically, the assassination backfired: it triggered civil war and led to the rise of the Roman Empire under Augustus.",
+            },
+          ],
+          Business: [
+            {
+              title: "The 80/20 Rule in Business",
+              summary:
+                "The Pareto Principle states that 80% of outcomes come from 20% of causes. Use this to prioritize high-impact tasks and eliminate low-value activities.",
+              deepDive:
+                "Apply the 80/20 rule to customer service: 20% of clients often generate 80% of complaints. Focus on resolving issues for this segment to dramatically improve overall satisfaction.",
+            },
+            {
+              title: "Why Companies Use Freemium Models",
+              summary:
+                "Freemium converts users by offering basic features for free, then charging for premium upgrades—building trust before asking for payment.",
+              deepDive:
+                "Dropbox grew from 100K to 4M users in 15 months using this model, proving that perceived value drives conversion better than upfront cost.",
+            },
+            {
+              title: "The Psychology Behind Pricing at $9.99",
+              summary:
+                "Charm pricing makes $9.99 feel significantly cheaper than $10—even though the difference is just one cent.",
+              deepDive:
+                "Studies show this tactic increases sales by up to 24% because our brains process the leftmost digit first and anchor on it.",
+            },
+            {
+              title: "How Netflix Uses Data to Pick Hit Shows",
+              summary:
+                "Netflix analyzes viewing habits, pause points, and rewatch rates to decide which shows to produce—turning data into billion-dollar content.",
+              deepDive:
+                "House of Cards was greenlit because data showed users loved David Fincher, Kevin Spacey, and British political dramas—all in one package.",
+            },
+            {
+              title: "Why Amazon Acquired Whole Foods",
+              summary:
+                "It wasn’t just about groceries—it was a strategic move to dominate offline retail, logistics, and fresh food delivery in one stroke.",
+              deepDive:
+                "The acquisition gave Amazon 460 physical stores overnight, prime real estate in wealthy neighborhoods, and a foothold in the $800B grocery market.",
+            },
+          ],
+          "How-To": [
+            {
+              title: "How to Remember Names Instantly",
+              summary:
+                "Repeat the name immediately after hearing it, associate it with a visual image, and use it in conversation within the next 30 seconds.",
+              deepDive:
+                "Memory experts also recommend using the 'method of loci'—associating names with locations in a familiar place like your home—to dramatically improve recall accuracy.",
+            },
+            {
+              title: "How to Wake Up Without an Alarm",
+              summary:
+                "Go to bed and wake up at the same time every day—even weekends—to train your circadian rhythm to wake you naturally.",
+              deepDive:
+                "Your body releases cortisol 30–60 minutes before your usual wake time, creating a natural 'alarm' if your schedule is consistent.",
+            },
+            {
+              title: "How to Read 2x Faster in One Week",
+              summary:
+                "Use a pointer (like your finger) to guide your eyes, eliminate subvocalization, and expand your peripheral vision to take in more words per glance.",
+              deepDive:
+                "Speed readers average 400–700 words per minute vs. the average 200–250—without losing comprehension when trained properly.",
+            },
+            {
+              title: "How to Negotiate Your Salary Confidently",
+              summary:
+                "Research market rates, frame your request around value (not need), and practice your pitch until it feels natural—not rehearsed.",
+              deepDive:
+                "People who negotiate their first job offer earn up to $1M more over their lifetime due to compounding raises on a higher base.",
+            },
+            {
+              title: "How to Stop Procrastinating Today",
+              summary:
+                "Use the '2-minute rule': if a task takes less than 2 minutes, do it now. For bigger tasks, just start with 2 minutes—momentum will carry you.",
+              deepDive:
+                "Procrastination is an emotion-regulation problem, not a time-management issue. Starting reduces anxiety, which fuels action.",
+            },
+          ],
+          Culture: [
+            {
+              title: "British Tea Etiquette You Didn’t Know",
+              summary:
+                "In the UK, milk goes in *after* tea to preserve the delicate flavor of fine teas. Also, never stir tea in a circular motion—use a gentle back-and-forth motion instead.",
+              deepDive:
+                "British tea etiquette also dictates that you should never pour milk first in fine bone china cups, as it was historically used to test the quality of the porcelain.",
+            },
+            {
+              title: "Why Japanese Bow Instead of Shake Hands",
+              summary:
+                "Bowing (ojigi) reflects respect, humility, and social hierarchy—deeper bows signal greater deference or apology.",
+              deepDive:
+                "In business, a 15-degree bow is casual, 30 degrees is standard, and 45+ degrees is for deep apologies or meeting high-status individuals.",
+            },
+            {
+              title: "The Meaning Behind Indian Head Wobbles",
+              summary:
+                "The Indian head wobble can mean 'yes,' 'maybe,' 'I understand,' or even 'I’m listening'—depending on context and tilt.",
+              deepDive:
+                "It’s a non-confrontational way to acknowledge without fully agreeing—rooted in a culture that values harmony over directness.",
+            },
+            {
+              title: "Why French People Kiss on the Cheek",
+              summary:
+                "La bise is a social ritual—not romantic—and the number of kisses varies by region (1 in Brittany, 4 in Paris).",
+              deepDive:
+                "During the pandemic, many French people missed la bise so much they reported feeling socially disconnected—showing how deeply it’s tied to identity.",
+            },
+            {
+              title: "The Hidden Rules of Italian Gestures",
+              summary:
+                "Italians use over 250 hand gestures daily—each with precise meaning. For example, pinched fingers mean 'What do you want?' or 'Perfect!'",
+              deepDive:
+                "This tradition dates back to ancient Rome and was refined during the Renaissance as a way to communicate across dialects.",
+            },
+          ],
+          Finance: [
+            {
+              title: "What Is Compound Interest?",
+              summary:
+                "Einstein called compound interest the 8th wonder of the world. Example: $100 at 10% annual interest becomes $259 in 10 years without additional deposits.",
+              deepDive:
+                "Compound interest works exponentially: at 7% annual return, your money doubles every 10 years. Starting early is more impactful than investing larger amounts later.",
+            },
+            {
+              title: "Why You Should Pay Yourself First",
+              summary:
+                "Automate savings before spending—so you save what’s left, not spend what’s left.",
+              deepDive:
+                "Studies show people who automate savings accumulate 3x more wealth over time, simply by removing the decision from daily life.",
+            },
+            {
+              title: "The Truth About Credit Scores",
+              summary:
+                "Your score isn’t about how much you earn—it’s about how reliably you repay debt. A janitor can have a better score than a CEO.",
+              deepDive:
+                "Payment history (35%) and credit utilization (30%) make up 65% of your FICO score—so always pay on time and keep balances under 30% of your limit.",
+            },
+            {
+              title: "How Index Funds Beat Most Investors",
+              summary:
+                "Index funds track markets like the S&P 500 and outperform 80% of actively managed funds over 10 years—due to lower fees and less human error.",
+              deepDive:
+                "Warren Buffett bet $1M that an S&P 500 index fund would beat 5 hedge funds over a decade. He won—easily.",
+            },
+            {
+              title: "Why Emergency Funds Prevent Debt",
+              summary:
+                "A $1,000 emergency fund stops small crises (like a flat tire) from becoming $2,000 credit card debts.",
+              deepDive:
+                "78% of Americans live paycheck to paycheck. Just $500 saved reduces financial stress by 40%, according to Federal Reserve data.",
+            },
+          ],
+          Science: [
+            {
+              title: "Why the Sky Is Blue",
+              summary:
+                "Sunlight scatters in the atmosphere, and blue light (short wavelength) scatters more than red—making the sky appear blue during the day.",
+              deepDive:
+                "At sunset, light travels through more atmosphere, scattering blue away and leaving reds and oranges—hence colorful sunsets.",
+            },
+            {
+              title: "How Photosynthesis Feeds the Planet",
+              summary:
+                "Photosynthesis converts sunlight, carbon dioxide, and water into glucose and oxygen. This process sustains nearly all life on Earth.",
+              deepDive:
+                "Chlorophyll in plant cells absorbs red and blue light most efficiently, reflecting green—which is why plants appear green to our eyes.",
+            },
+            {
+              title: "Why We Yawn—and Why It’s Contagious",
+              summary:
+                "Yawning may cool the brain and increase alertness. It’s contagious due to empathy—mirroring others’ states is a social bonding mechanism.",
+              deepDive:
+                "People with higher empathy scores yawn more when seeing others yawn. Even dogs catch human yawns!",
+            },
+            {
+              title: "The Science of Lightning",
+              summary:
+                "Lightning forms when ice particles collide in storm clouds, creating electrical charges that discharge as bolts up to 5x hotter than the sun’s surface.",
+              deepDive:
+                "A single bolt can carry 1 billion volts of electricity and strike the same place twice—contrary to popular myth.",
+            },
+            {
+              title: "Why We Can’t Tickle Ourselves",
+              summary:
+                "Your brain predicts your own movements and cancels the tickle response—so surprise is key to the sensation.",
+              deepDive:
+                "This predictive ability is why robots that delay your hand movement by 200ms can make you tickle yourself—it breaks the brain’s prediction.",
+            },
+          ],
+          Health: [
+            {
+              title: "Why You Should Drink Water Before Meals",
+              summary:
+                "Drinking water before meals can reduce calorie intake by up to 13%. Staying hydrated also boosts metabolism and improves cognitive function.",
+              deepDive:
+                "The human body is about 60% water. Even mild dehydration (1–2%) can impair attention, memory, and motor coordination significantly.",
+            },
+            {
+              title: "The 20-20-20 Rule for Eye Health",
+              summary:
+                "Every 20 minutes, look at something 20 feet away for 20 seconds to reduce digital eye strain.",
+              deepDive:
+                "Prolonged screen use reduces blink rate by 60%, causing dry eyes. This simple habit restores moisture and focus.",
+            },
+            {
+              title: "How Sleep Cleans Your Brain",
+              summary:
+                "During deep sleep, your brain flushes out toxins like beta-amyloid (linked to Alzheimer’s) through the glymphatic system.",
+              deepDive:
+                "One night of poor sleep increases beta-amyloid by 5%—highlighting why consistent 7–9 hours is non-negotiable for long-term brain health.",
+            },
+            {
+              title: "Why Walking Boosts Creativity",
+              summary:
+                "Walking increases creative output by 60%, even after you sit back down—thanks to enhanced blood flow and relaxed focus.",
+              deepDive:
+                "Stanford researchers found that walking—especially outdoors—doubled the number of novel, high-quality ideas participants generated.",
+            },
+            {
+              title: "The Power of Deep Breathing",
+              summary:
+                "Slow, deep breaths activate the parasympathetic nervous system, lowering heart rate, blood pressure, and stress hormones in under 60 seconds.",
+              deepDive:
+                "Navy SEALs use box breathing (4s inhale, 4s hold, 4s exhale, 4s hold) to stay calm under extreme pressure.",
+            },
+          ],
+          Technology: [
+            {
+              title: "The Power of Spaced Repetition",
+              summary:
+                "Spaced repetition is a learning technique that uses increasing intervals of time between reviews to exploit the psychological spacing effect.",
+              deepDive:
+                "Apps like Anki and Duolingo use spaced repetition algorithms to optimize learning schedules based on your personal recall performance.",
+            },
+            {
+              title: "How HTTPS Keeps You Safe",
+              summary:
+                "HTTPS encrypts data between your browser and websites using SSL/TLS—preventing hackers from stealing passwords or credit card info.",
+              deepDive:
+                "The padlock icon means your connection is encrypted. Without it, anyone on the same Wi-Fi can intercept your data.",
+            },
+            {
+              title: "Why Your Phone Battery Dies Faster in Cold Weather",
+              summary:
+                "Lithium-ion batteries slow down in cold temperatures, reducing ion flow and temporarily lowering capacity—though it’s usually reversible.",
+              deepDive:
+                "Apple recommends keeping iPhones between 0°C and 35°C. Below -20°C, batteries can shut down completely—even if charged.",
+            },
+            {
+              title: "How GPS Knows Your Exact Location",
+              summary:
+                "Your phone receives signals from at least 4 satellites, calculating distance via signal travel time—and triangulating your position within meters.",
+              deepDive:
+                "GPS satellites have atomic clocks accurate to 1 nanosecond. Without relativity corrections, GPS would drift by 10 km per day!",
+            },
+            {
+              title: "The Truth About ‘Unlimited’ Data Plans",
+              summary:
+                "Most ‘unlimited’ plans throttle speeds after 20–50GB—so you’re not actually getting unlimited high-speed data.",
+              deepDive:
+                "Carriers use ‘deprioritization’: during network congestion, heavy users get slower speeds than others—even on the same plan.",
+            },
+          ],
+          Art: [
+            {
+              title: "Why the Mona Lisa’s Smile Changes",
+              summary:
+                "The Mona Lisa's smile appears to change due to peripheral vision and sfumato, a painting technique using subtle gradations of light and shadow.",
+              deepDive:
+                "Da Vinci painted the Mona Lisa over four years, carrying it with him everywhere. It's now protected behind bulletproof glass at the Louvre.",
+            },
+            {
+              title: "How Van Gogh’s Mental Health Shaped His Art",
+              summary:
+                "Van Gogh’s swirling skies and intense colors may reflect his emotional turbulence—yet his technique was deliberate and innovative.",
+              deepDive:
+                "He painted 750 works in 10 years, often completing one per day. His use of impasto (thick paint) created texture that conveyed movement and feeling.",
+            },
+            {
+              title: "The Hidden Math in Renaissance Art",
+              summary:
+                "Artists like Leonardo and Raphael used the golden ratio (1.618) to compose balanced, harmonious paintings that feel ‘right’ to the eye.",
+              deepDive:
+                "The golden ratio appears in the Parthenon, the Pyramids, and even DNA—suggesting a universal aesthetic principle.",
+            },
+            {
+              title: "Why Picasso Painted in Blue",
+              summary:
+                "During his ‘Blue Period,’ Picasso used cold tones to express poverty, loneliness, and despair—inspired by a friend’s suicide.",
+              deepDive:
+                "His blue paintings, once unsellable, now fetch over $100 million—showing how emotional authenticity transcends time.",
+            },
+            {
+              title: "The Secret Behind Michelangelo’s David",
+              summary:
+                "David’s hands and head are oversized to appear proportional when viewed from below—since the statue was originally placed high on a cathedral.",
+              deepDive:
+                "Michelangelo carved David from a single block of marble rejected by other sculptors—proving that vision transforms ‘flaws’ into masterpieces.",
+            },
+          ],
+          Sports: [
+            {
+              title: "Why Olympic Rings Represent the World",
+              summary:
+                "The Olympic rings represent the five inhabited continents. The colors—blue, yellow, black, green, and red—were chosen because every national flag includes at least one of them.",
+              deepDive:
+                "The Olympic motto 'Citius, Altius, Fortius' means 'Faster, Higher, Stronger.' It was proposed by Pierre de Coubertin, founder of the modern Olympic Games.",
+            },
+            {
+              title: "How Michael Jordan Changed Basketball",
+              summary:
+                "Jordan’s competitiveness, branding, and global appeal turned the NBA into a worldwide phenomenon—and made athletes into icons.",
+              deepDive:
+                "His Air Jordan sneakers were banned by the NBA for not matching team colors—sparking a marketing revolution that earned Nike $100M in the first year.",
+            },
+            {
+              title: "The Science of a Perfect Free Kick",
+              summary:
+                "Bending a soccer ball relies on the Magnus effect: spin creates pressure differences that curve the ball mid-air.",
+              deepDive:
+                "Players like Beckham and Messi mastered this by striking off-center with the inside of their foot—creating spin without sacrificing power.",
+            },
+            {
+              title: "Why Tennis Players Grunt",
+              summary:
+                "Grunting isn’t just habit—it increases serve speed by up to 5% by engaging core muscles and releasing tension.",
+              deepDive:
+                "Studies show grunters hit shots 3–5 mph faster, but opponents also have 30ms less time to react—making it a legal but controversial tactic.",
+            },
+            {
+              title: "The Origin of the Marathon Distance",
+              summary:
+                "The 26.2-mile marathon commemorates Pheidippides, who ran from Marathon to Athens to announce victory—then collapsed and died.",
+              deepDive:
+                "The distance was standardized in 1908 for the London Olympics so the race would finish in front of the royal box—adding 385 yards to the original 26 miles.",
+            },
+          ],
+        };
+
+        const categories = Object.keys(contentByCategory);
+        const images = {
+          History: "https://placehold.co/400x200/ea580c/ffffff?text=History",
+          Business: "https://placehold.co/400x200/059669/ffffff?text=Business",
+          "How-To": "https://placehold.co/400x200/dc2626/ffffff?text=How-To",
+          Culture: "https://placehold.co/400x200/7c3aed/ffffff?text=Culture",
+          Finance: "https://placehold.co/400x200/0891b2/ffffff?text=Finance",
+          Science: "https://placehold.co/400x200/0d9488/ffffff?text=Science",
+          Health: "https://placehold.co/400x200/be123c/ffffff?text=Health",
+          Technology:
+            "https://placehold.co/400x200/4f46e5/ffffff?text=Technology",
+          Art: "https://placehold.co/400x200/be185d/ffffff?text=Art",
+          Sports: "https://placehold.co/400x200/1e40af/ffffff?text=Sports",
+        };
+
+        categories.forEach((category) => {
+          contentByCategory[category].forEach((item) => {
+            cards.push({
+              id: id++,
+              title: item.title,
+              summary: item.summary,
+              category: category,
+              readTime: Math.floor(Math.random() * 15) + 20 + "s",
+              deepDive: item.deepDive,
+              image: images[category],
+            });
+          });
+        });
+
+        return cards;
+      }
+
+      let allKnowledgeCards = generateMockCards();
+
+      // =============== 3. Randomize initial card order ===============
+      const shuffleArray = (arr) => [...arr].sort(() => Math.random() - 0.5);
+      let mockKnowledgeCards = shuffleArray([...allKnowledgeCards]);
+
+      // =============== State ===============
       let isLoggedIn = true;
       let userInterests = ["History", "Business", "How-To"];
       let savedCards = new Set([1, 2, 4]);
       let feedType = "forYou";
+      let hasLoadedMore = false;
 
+      // =============== DOM Elements ===============
       const feedTypeButtons = {
         forYou: document.getElementById("for-you-btn"),
         byYou: document.getElementById("by-you-btn"),
@@ -288,10 +642,13 @@
         forYou: document.getElementById("for-you-content"),
         byYou: document.getElementById("by-you-content"),
       };
+      const loadingIndicator = document.getElementById("loading-indicator");
 
+      // =============== Init ===============
       function init() {
         setupEventListeners();
         renderFeed();
+        setupInfiniteScroll();
       }
 
       function setupEventListeners() {
@@ -309,6 +666,7 @@
           .addEventListener("click", saveInterests);
       }
 
+      // =============== Feed Type Logic ===============
       function setFeedType(type) {
         feedType = type;
         if (type === "forYou") {
@@ -341,6 +699,7 @@
         }
       }
 
+      // =============== Render Logic ===============
       function renderFeed() {
         if (feedType === "forYou") {
           renderCards(mockKnowledgeCards, contentAreas.forYou, false);
@@ -374,60 +733,70 @@
               card.readTime +
               " Read</div>";
           cardDiv.innerHTML = `
-                    <div class="mb-3">
-                        <span class="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">${
-                          card.category
-                        }</span>
-                        ${savedTime}
-                    </div>
-                    <div class="mb-4"><h3 class="text-xl font-bold text-gray-800 leading-tight">${
-                      card.title
-                    }</h3></div>
-                    <div class="mb-4"><p class="text-gray-600 leading-relaxed">${
-                      card.summary
-                    }</p></div>
-                    <div class="pt-4 border-t border-gray-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex gap-2">
-                                <button class="like-btn p-2 rounded-full transition-colors flex items-center ${
-                                  isSaved
-                                    ? "bg-purple-100 text-purple-600"
-                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                }" data-id="${card.id}">
-                                    <i class="fas fa-heart"></i>
-                                </button>
-                                <button class="save-btn p-2 rounded-full transition-colors flex items-center ${
-                                  isSaved
-                                    ? "bg-purple-100 text-purple-600"
-                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                }" data-id="${card.id}">
-                                    <i class="fas fa-${
-                                      isSaved ? "bookmark" : "bookmark"
-                                    } ${
+            <div class="mb-3">
+              <span class="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">${
+                card.category
+              }</span>
+              ${savedTime}
+            </div>
+            <div class="mb-4"><h3 class="text-xl font-bold text-gray-800 leading-tight">${
+              card.title
+            }</h3></div>
+            <div class="mb-4"><p class="text-gray-600 leading-relaxed">${
+              card.summary
+            }</p></div>
+            <div class="pt-4 border-t border-gray-100">
+              <div class="flex items-center justify-between">
+                <div class="flex gap-2">
+                  <!-- Like button: same as share until clicked -->
+                  <button class="like-btn p-2 rounded-full transition-colors flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200" data-id="${
+                    card.id
+                  }">
+                    <i class="fas fa-heart"></i>
+                  </button>
+                  <!-- Save button: same as share until clicked -->
+                  <button class="save-btn p-2 rounded-full transition-colors flex items-center bg-gray-100 text-gray-600 hover:bg-gray-200" data-id="${
+                    card.id
+                  }">
+                    <i class="fas fa-${isSaved ? "bookmark" : "bookmark"} ${
             isSaved ? "text-purple-600" : "text-gray-600"
           }"></i>
-                                </button>
-                                <button class="share-btn p-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors flex items-center" data-id="${
-                                  card.id
-                                }">
-                                    <i class="fas fa-share"></i>
-                                </button>
-                            </div>
-                            <button class="deep-dive-btn text-purple-600 font-medium text-sm hover:text-purple-700 flex items-center gap-1" data-id="${
-                              card.id
-                            }">
-                                Learn More <i class="fas fa-book-open"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-          cardDiv
-            .querySelector(".like-btn")
-            .addEventListener("click", () => {});
-          cardDiv.querySelector(".save-btn").addEventListener("click", () => {
-            if (savedCards.has(card.id)) savedCards.delete(card.id);
-            else savedCards.add(card.id);
-            renderFeed();
+                  </button>
+                  <!-- Share button -->
+                  <button class="share-btn p-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors flex items-center" data-id="${
+                    card.id
+                  }">
+                    <i class="fas fa-share"></i>
+                  </button>
+                </div>
+                <button class="deep-dive-btn text-purple-600 font-medium text-sm hover:text-purple-700 flex items-center gap-1" data-id="${
+                  card.id
+                }">
+                  Learn More <i class="fas fa-book-open"></i>
+                </button>
+              </div>
+            </div>
+          `;
+          cardDiv.querySelector(".like-btn").addEventListener("click", (e) => {
+            e.target.closest(".like-btn").classList.toggle("bg-purple-100");
+            e.target.closest(".like-btn").classList.toggle("text-purple-600");
+            e.target.closest(".like-btn").classList.toggle("bg-gray-100");
+            e.target.closest(".like-btn").classList.toggle("text-gray-600");
+          });
+          cardDiv.querySelector(".save-btn").addEventListener("click", (e) => {
+            const btn = e.target.closest(".save-btn");
+            const id = parseInt(btn.dataset.id);
+            if (savedCards.has(id)) {
+              savedCards.delete(id);
+              btn.classList.remove("bg-purple-100", "text-purple-600");
+              btn.classList.add("bg-gray-100", "text-gray-600");
+              btn.innerHTML = '<i class="fas fa-bookmark text-gray-600"></i>';
+            } else {
+              savedCards.add(id);
+              btn.classList.remove("bg-gray-100", "text-gray-600");
+              btn.classList.add("bg-purple-100", "text-purple-600");
+              btn.innerHTML = '<i class="fas fa-bookmark text-purple-600"></i>';
+            }
           });
           cardDiv
             .querySelector(".share-btn")
@@ -450,6 +819,7 @@
         document.getElementById("deep-dive-modal").classList.remove("hidden");
       }
 
+      // =============== Interests Modal ===============
       function showInterestsModal() {
         document.getElementById("interests-modal").classList.remove("hidden");
         renderInterestsList();
@@ -493,6 +863,41 @@
         setFeedType("byYou");
       }
 
+      // =============== Infinite Scroll (Simulated API) ===============
+      function setupInfiniteScroll() {
+        let ticking = false;
+        window.addEventListener("scroll", () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              if (
+                window.innerHeight + window.scrollY >=
+                document.body.offsetHeight - 500
+              ) {
+                loadMoreContent();
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+      }
+
+      function loadMoreContent() {
+        if (hasLoadedMore) return;
+        hasLoadedMore = true;
+        loadingIndicator.classList.remove("hidden");
+
+        // Simulate API delay
+        setTimeout(() => {
+          // Generate 10 more random cards (simulating fresh data)
+          const newCards = shuffleArray([...allKnowledgeCards]).slice(0, 10);
+          mockKnowledgeCards = [...mockKnowledgeCards, ...newCards];
+          renderFeed();
+          loadingIndicator.classList.add("hidden");
+        }, 800);
+      }
+
+      // =============== Start App ===============
       init();
     </script>
   </body>
